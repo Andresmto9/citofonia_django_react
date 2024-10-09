@@ -1,3 +1,25 @@
-citoplus
-citoplus@gmail.com
-Citoplus123+
+Nombre usuario: citoplus
+Correo usuario: citoplus@gmail.com
+Constraseña usuario: Citoplus123+
+
+Instalación venv
+- python3 -m venv {nombre del directorio venv}
+
+Instalación de pip para virutalenv
+- venv/bin/pip install virtualenv
+
+Instalación pip de Django
+- venv/bin/pip install django
+
+Instalación de Django Rest Framework
+- venv/bin/pip install djangorestframework 
+
+Instalación herramientas djangorestframework
+- venv/bin/pip install setuptools
+
+Instalación de Django Cors Headers
+- venv/bin/pip install django-cors-headers
+
+Instalación de CoreAPI
+- venv/bin/pip install coreapi
+
