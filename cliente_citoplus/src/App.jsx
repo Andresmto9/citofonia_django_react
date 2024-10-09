@@ -1,4 +1,9 @@
 function App() {
+    Swal.fire({
+        title: "Good job!",
+        text: "You clicked the button!",
+        icon: "success"
+    });
     return (
         <>
             <div className="grid grid-cols-12">
