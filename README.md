@@ -13,9 +13,9 @@
 - Desde la terminal, navega a la carpeta `citoplus_django`.
   
 - Realiza la instalación de un entorno virtual (venv) si es necesario:
-  # Comando para Windows
+  *Comando para Windows*
   python -m venv {nombre del directorio venv}
-  # Alternativa para Linux
+  *Alternativa para Linux*
   python3 -m venv {nombre del directorio venv}
 
 - Configura la terminal para el interpretador de Python
