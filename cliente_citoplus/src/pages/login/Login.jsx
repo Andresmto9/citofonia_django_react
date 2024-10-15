@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { getInfoUsua } from "../../api/login.api"
 import { getTokenUsua } from "../../api/login.api"
 
 /**
@@ -16,10 +15,57 @@ async function handleSubmit(e) {
 
     // Da formato JSON al formulario del login
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson)
 
-    const resp = await getTokenUsua(formJson);
-    console.log(resp)
+    if(formJson.email == '' || formJson.password == ''){
+        Swal.fire({
+            title: "¡UN MOMENTO!",
+            text: "Debe registrar el correo y la constraseña.",
+            icon: "error",
+            confirmButtonColor: "#28a745",
+        });
+    }else{
+        const resp = await getTokenUsua(formJson);
+        if(resp.status == 200){
+            let url = '';
+            switch (resp.data.roles[0]) {
+                case 'Admin':
+                        url = 'usuarios'
+                    break;
+
+                case 'Residente':
+                        url = 'residentes'
+                    break;
+
+                case 'Empleado':
+                        url = 'empleados'
+                    break;
+            
+                default:
+                    break;
+            }
+            Swal.fire({
+                title: "¡PERFECTO!",
+                text: "Se realizo el ingreso exitosamente.",
+                icon: "success",
+                confirmButtonColor: "#28a745",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem("usua_id");
+                    sessionStorage.setItem("usua_id", resp.data.user.id);
+                    Cookies.remove('cookie_token')
+                    Cookies.set('cookie_token', resp.data.token, { expires: 60 });
+                    window.location.href = url
+                }
+            });
+        }else{
+            Swal.fire({
+                title: "¡UN MOMENTO!",
+                text: "Ocurrió un problema con el ingreso, por favor verifique la información.",
+                icon: "error",
+                confirmButtonColor: "#28a745",
+            });
+        }
+    }
 }
 
 function Login() {
@@ -33,11 +79,11 @@ function Login() {
                 <form method="post" onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-gray-600">Correo</label>
-                        <input type="text" name="correo" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"/>
+                        <input type="text" name="email" id="email" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"/>
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-600">Constraseña</label>
-                        <input type="password" name="password" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"/>
+                        <input type="password" name="password" id="password" className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"/>
                     </div>
                     <div className="mb-4">
                         <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Ingresar</button>
