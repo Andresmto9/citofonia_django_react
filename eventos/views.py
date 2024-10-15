@@ -1,51 +1,101 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework import status
-from .serializer import UsuarioLoginSerializer
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 from .serializer import EventosSerializer
 from .models import Evento
-from .serializer import UsuariosSerializer
-from .models import User
 from .serializer import RolesSerializer
 from .models import Role
 from .serializer import RolesUsuariosSerializer
 from .models import RolesUsuario
-
-class LoginView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serializer = UsuarioLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            usuario = serializer.validated_data['usuario']
-            
-            print(f"usuario {usuario}")
-
-            token, created = Token.objects.get_or_create(user=usuario)
-            
-            return Response({
-                'token': token.key,
-                'mensaje': 'Token creado exitosamente.' if created else 'Token existente retornado.'
-            }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from .serializer import UsuariosSerializer
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login(request):
+
+    user = get_object_or_404(User, email=request.data["email"])
+
+    if not user.check_password(request.data["password"]):
+        return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    token, created = Token.objects.get_or_create(user=user)
+
+    roles_usuario = RolesUsuario.objects.filter(usua_id=user)
+    roles = [role.role_id.nombre for role in roles_usuario]
+
+    serializer = UsuariosSerializer(instance=user)
+
+    return Response({
+        "token": token.key, 
+        "user": serializer.data,
+        "roles": roles
+    }, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def registro(request):
+    serializer = UsuariosSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        user = User.objects.get(username=serializer.data["username"])
+        user.set_password(serializer.data["password"])
+        user.save()
+
+        role_name = request.data.get('rol')
+        if role_name:
+            try:
+                role = Role.objects.get(nombre=role_name) 
+                RolesUsuario.objects.create(usua_id=user, role_id=role)
+            except Role.DoesNotExist:
+                return Response({'error': 'El rol especificado no existe.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        token = Token.objects.create(user=user)
+
+        return Response({'token':token.key, 'user': serializer.data}, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def perfil(request):
+    serializer = UsuariosSerializer(instance=request.user)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Create your views here.
+
+class UsuariosView(viewsets.ModelViewSet):
+    serializer_class = UsuariosSerializer
+    queryset = User.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        usuarios = []
+        for data in serializer.data:
+            user = User.objects.get(id=data['id'])
+            roles_usuario = RolesUsuario.objects.filter(usua_id=user)
+            roles = [role.role_id.nombre for role in roles_usuario]
+            data['rol'] = roles
+            usuarios.append(data)
+
+        return Response(usuarios)
 
 class EventoView(viewsets.ModelViewSet):
     serializer_class = EventosSerializer
     queryset = Evento.objects.all()
-
-class UsuarioView(viewsets.ModelViewSet):
-    serializer_class = UsuariosSerializer
-    queryset = User.objects.all()
-    authentication_classes = [TokenAuthentication]  
-    permission_classes = [IsAuthenticated]
 
 class RoleView(viewsets.ModelViewSet):
     serializer_class = RolesSerializer
