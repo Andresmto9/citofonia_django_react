@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DatatableUsuarios from '../../components/DatatableUsuarios';
-import { getUsuarios } from "../../api/usuarios.api"
+import { getUsuarios, getDetaUsua } from "../../api/usuarios.api"
 import {EditarIcono, BorrarIcono} from "../../components/Iconos"
 
 // Funcionalidad sencilla para mostrar el formulario y esconder la tabla de usuario
@@ -40,7 +39,22 @@ const borrarUsuarios = (event) => {
 * Funcionalidad para borrar el usuario seleccionado en la tabla
 */
 const getInfoUsuarios = (event) => {
-    
+    let usuaID = event.currentTarget.dataset.id;
+    getDataUsua(usuaID)
+        .then((data) => {
+            console.log(data)
+            // if(data.status == 200){        
+            // }else{
+            // }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+}
+
+async function getDataUsua(usuaID){
+    const resp = await getDetaUsua(usuaID);
+    return resp
 }
 
 /**
