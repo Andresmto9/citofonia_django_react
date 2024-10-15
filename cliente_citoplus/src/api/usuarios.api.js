@@ -33,3 +33,20 @@ export const getRoles = () => {
 
     return resp;
 }
+
+export const getDetaUsua = (id) => {
+    const instance = axios.create({
+        baseURL: 'http://localhost:8000/eventos/api/v1/',
+        timeout: 1000,
+        headers: {'Authorization': `Token ${Cookies.get('cookie_token')}`}
+    });
+
+    const resp = instance.get(`/usuarios/${id}`)
+        .then(response => {
+            return response;
+        }).catch(function (error) {
+            return error;
+        });
+
+    return resp;
+}
