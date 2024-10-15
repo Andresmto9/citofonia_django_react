@@ -1,4 +1,4 @@
-Nombre usuario: citoplus
+Nombre usuario: Citoplus
 Correo usuario: citoplus@gmail.com
 Constraseña usuario: Citoplus123+
 
