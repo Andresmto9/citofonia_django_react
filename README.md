@@ -25,39 +25,39 @@
   4. Abre una nueva terminal dentro de **Visual Studio Code** para confirmar que estás utilizando el intérprete de Python correcto.
      
 - Instala pip para virtualenv:
-  # Comando para Windows
+  ### Comando para Windows
   pip install virtualenv
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install virtualenv
   
 - Instala Django:
-  # Comando para Windows
+  ### Comando para Windows
   pip install django
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install django
   
 - Instala Django Rest Framework:
-  # Comando para Windows
+  ### Comando para Windows
   pip install djangorestframework
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install djangorestframework
   
 - Instala herramientas de Django Rest Framework:
-  # Comando para Windows
+  ### Comando para Windows
   pip install setuptools
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install setuptools
   
 - Instala Django Cors Headers:
-  # Comando para Windows
+  ### Comando para Windows
   pip install django-cors-headers
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install django-cors-headers
   
 - Instala CoreAPI:
-  # Comando para Windows
+  ### Comando para Windows
   pip install coreapi
-  # Alternativa para Linux
+  ### Alternativa para Linux
   venv/bin/pip install coreapi
   
 ## 3. Configuración de Migraciones
@@ -65,15 +65,15 @@
 1. Verifica si existe la carpeta `migrations` dentro de la carpeta `eventos` del proyecto.
    
    - Si la carpeta no existe, crea las migraciones ejecutando el siguiente comando en la terminal:
-     # Comando para Windows
+     #### Comando para Windows
      python manage.py makemigrations {nombre de la migración}
-     # Alternativa para Linux
+     #### Alternativa para Linux
      python3 manage.py makemigrations {nombre de la migración}
      
 3. Si la carpeta `migrations` ya existe o has creado nuevas migraciones, procede a aplicar las migraciones con el siguiente comando:
-   # Comando para Windows
+   #### Comando para Windows
    python manage.py migrate
-   # Alternativa para Linux
+   #### Alternativa para Linux
    python3 manage.py migrate
    
 ## 4. Levantamiento del Servidor Django para el Consumo de API
@@ -81,9 +81,9 @@
 1. Abre una terminal dentro del directorio raíz de tu proyecto Django.
    
 2. Ejecuta el siguiente comando para iniciar el servidor de desarrollo de Django:
-   # Comando para Windows
+   #### Comando para Windows
    python manage.py runserver
-   # Alternativa para Linux
+   #### Alternativa para Linux
    python3 manage.py runserver
 
 3. El servidor se ejecutará en la dirección 127.0.0.1:8000 por defecto.
@@ -98,7 +98,7 @@
 1. Abre una terminal y navega al directorio del cliente, generalmente llamado `{cliente_citoplus}`.
 
 2. Ejecuta el siguiente comando para instalar las dependencias necesarias utilizando npm:
-   # Comando para Windows - Linux
+   #### Comando para Windows - Linux
    npm install
 
 3. Una vez que las dependencias se hayan instalado correctamente, levanta el servidor de desarrollo con el siguiente comando:
