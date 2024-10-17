@@ -1,2 +1,3 @@
 @import "./css/_tailwind.css";
-@import "./css/_tabletail.css";
+/* @import "./css/_tabletail.css"; */
+@import "./css/datatable.css";
