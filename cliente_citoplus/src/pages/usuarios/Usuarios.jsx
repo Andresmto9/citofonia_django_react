@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getUsuarios, getDetaUsua } from "../../api/usuarios.api"
 import {EditarIcono, BorrarIcono} from "../../components/Iconos"
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
+import 'datatables.net-select-dt';
+import 'datatables.net-responsive-dt';
+
+DataTable.use(DT)
+
+// DataTable.use(DT);
 
 // Funcionalidad sencilla para mostrar el formulario y esconder la tabla de usuario
 const showFormUsuario = () => {
@@ -83,6 +91,14 @@ function Usuarios() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const columns = [
+        { data: 'name' },
+        { data: 'position' },
+        { data: 'office' },
+        { data: 'extn' },
+        { data: 'start_date' },
+        { data: 'salary' },
+    ];
 
     useEffect(() => {
         if(Cookies.get('cookie_token') == undefined){
@@ -144,6 +160,32 @@ function Usuarios() {
                     </div>
                 </div>
                 <div className="overflow-x-auto relative shadow-md sm:rounded-lg" id="contTableUsua">
+
+                    <DataTable className="">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Office</th>
+                                <th>Extn.</th>
+                                <th>Start date</th>
+                                <th>Salary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {usuarios.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                    <td className="py-4 px-6 text-center">{item.username}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </DataTable>
+
                     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="tblUsuario">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
