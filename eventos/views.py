@@ -132,6 +132,33 @@ class EventoView(viewsets.ModelViewSet):
     serializer_class = EventosSerializer
     queryset = Evento.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        print(f"Cosa: {serializer}")
+
+        eventos = []
+        for data in serializer.data:
+            user = User.objects.get(id=data['usua_id'])
+            data['name'] = user.username
+            print(f"Datos: {data}")
+            eventos.append(data)
+
+        return Response(eventos)
+
+    def update(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        
+        try:
+            queryset.estado = True
+            queryset.save()
+
+            serializer = self.get_serializer(queryset)
+            return Response(serializer.data)
+        
+        except ValueError:
+            return Response({'error': 'No fue posible actualizar el estado del evento.'}, status=status.HTTP_400_BAD_REQUEST)
+
 class RoleView(viewsets.ModelViewSet):
     serializer_class = RolesSerializer
     queryset = Role.objects.all()

@@ -8,8 +8,8 @@ from .models import RolesUsuario
 
 class EventosSerializer(serializers.ModelSerializer):
     class Meta:
-        # fields = ('id', 'usua_id', 'nombre' 'celular' 'info_visita' 'descripcion' 'estado')
         model = Evento
+        # fields = ['id', 'usua_id', 'nombre' 'celular' 'info_visita' 'descripcion' 'estado']
         fields = '__all__'
 
 

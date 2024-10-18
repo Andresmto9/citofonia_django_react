@@ -51,7 +51,6 @@ const getInfoUsuarios = (event) => {
         .then((data) => {
             if(data.status == 200){
                 showFormUsuario()
-                console.log(data.data);
                 $("#name").val(data.data.username);
                 $("#email").val(data.data.email);
                 $("#rol").val(data.data.roles[0]);
