@@ -77,7 +77,7 @@ def perfil(request):
 
 class UsuariosView(viewsets.ModelViewSet):
     serializer_class = UsuariosSerializer
-    queryset = User.objects.all()
+    queryset = User.objects.filter(is_staff=False)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -92,10 +92,72 @@ class UsuariosView(viewsets.ModelViewSet):
             usuarios.append(data)
 
         return Response(usuarios)
+    
+    def retrieve(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        serializer = self.get_serializer(queryset)
+
+        user = serializer.data
+        roles_usuario = RolesUsuario.objects.filter(usua_id=queryset)
+        roles = [role.role_id.nombre for role in roles_usuario]
+
+        user['roles'] = roles
+
+        return Response(user)
+    
+    def update(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        serializer = self.get_serializer(queryset, data=request.data, partial=True)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if 'rol' in request.data:
+            rol = request.data['rol']
+
+            try:
+                nuevo_rol = Role.objects.get(nombre=rol)
+
+                RolesUsuario.objects.update_or_create(
+                    usua_id=queryset,
+                    defaults={'role_id': nuevo_rol}
+                )
+
+            except Role.DoesNotExist:
+                return Response({'error': 'El rol no existe.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.data)
 
 class EventoView(viewsets.ModelViewSet):
     serializer_class = EventosSerializer
     queryset = Evento.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        print(f"Cosa: {serializer}")
+
+        eventos = []
+        for data in serializer.data:
+            user = User.objects.get(id=data['usua_id'])
+            data['name'] = user.username
+            print(f"Datos: {data}")
+            eventos.append(data)
+
+        return Response(eventos)
+
+    def update(self, request, *args, **kwargs):
+        queryset = self.get_object()
+        
+        try:
+            queryset.estado = True
+            queryset.save()
+
+            serializer = self.get_serializer(queryset)
+            return Response(serializer.data)
+        
+        except ValueError:
+            return Response({'error': 'No fue posible actualizar el estado del evento.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RoleView(viewsets.ModelViewSet):
     serializer_class = RolesSerializer

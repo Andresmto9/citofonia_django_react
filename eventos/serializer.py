@@ -8,15 +8,15 @@ from .models import RolesUsuario
 
 class EventosSerializer(serializers.ModelSerializer):
     class Meta:
-        # fields = ('id', 'usua_id', 'nombre' 'celular' 'info_visita' 'descripcion' 'estado')
         model = Evento
+        # fields = ['id', 'usua_id', 'nombre' 'celular' 'info_visita' 'descripcion' 'estado']
         fields = '__all__'
 
 
 class UsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'email']
 
 # class UsuarioLoginSerializer(serializers.Serializer):
 #     correo = serializers.CharField(max_length=300)
