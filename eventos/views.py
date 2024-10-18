@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.hashers import make_password
 
 
 @api_view(['POST'])
@@ -111,6 +112,12 @@ class UsuariosView(viewsets.ModelViewSet):
 
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        if 'password' in request.data:
+            print(f"Existe")
+            password = serializer.validated_data.get('password')
+            queryset.set_password(password)
+            queryset.save()
 
         if 'rol' in request.data:
             rol = request.data['rol']

@@ -16,7 +16,7 @@ class EventosSerializer(serializers.ModelSerializer):
 class UsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email', 'password']
 
 # class UsuarioLoginSerializer(serializers.Serializer):
 #     correo = serializers.CharField(max_length=300)
