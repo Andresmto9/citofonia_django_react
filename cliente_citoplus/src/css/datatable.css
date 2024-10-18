@@ -583,7 +583,8 @@ table.dataTable > tbody > tr.selected a {
 table.dataTable > tbody > tr > th,
 table.dataTable > tbody > tr > td {
   padding: 8px 10px;
-  background: red !important;
+  border-bottom: 1px solid;
+  padding: 1rem;
 }
 table.dataTable.row-border > tbody > tr > *,
 table.dataTable.display > tbody > tr > * {
