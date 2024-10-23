@@ -1,4 +1,4 @@
-# Presentación Prueba Técnica Citoplus
+# Proyecto citofonía Django y React
 
 ## 1. Clonación del Repositorio para ser Ejecutado en Visual Studio
 
